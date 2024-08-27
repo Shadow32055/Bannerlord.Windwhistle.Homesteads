@@ -1,9 +1,5 @@
 ﻿using SandBox.View.Map;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Party.PartyComponents;
@@ -42,6 +38,8 @@ namespace Homesteads.Models {
         // DONT USE SAVEABLE FIELD 6 AND 7
         [SaveableField(8)]
         private HomesteadScene? homesteadScene = null;
+        [SaveableField(9)]
+        public bool AutoRecruitEnabled = true;
 
         public Homestead(Hero initialLeader) {
             leader = initialLeader;
@@ -166,7 +164,7 @@ namespace Homesteads.Models {
         }
 
         private void DailyTickAutoRecruitSettlers() {
-            if (Troops.Count >= GetTroopLimit())
+            if (!AutoRecruitEnabled && Troops.Count >= GetTroopLimit())
                 return;
 
             int settlersArriving = 0;

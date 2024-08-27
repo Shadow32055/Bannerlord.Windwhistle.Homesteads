@@ -7,6 +7,7 @@ using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Inventory;
+using TaleWorlds.CampaignSystem.Overlay;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
@@ -165,8 +166,20 @@ namespace Homesteads {
                 GameMenu.SwitchToMenu("homestead_menu_manage_main");
                 HomesteadTutorial.ManagingHomestead();
             });
-            starter.AddGameMenu("homestead_menu_manage_main", "{CURRENT_HOMESTEAD_INFORMATION}", null);
-
+            starter.AddGameMenu("homestead_menu_manage_main", "{CURRENT_HOMESTEAD_INFORMATION}", null, GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.None, null);
+            starter.AddGameMenuOption("homestead_menu_manage_main", "homestead_menu_manage_autorecruittoggle", Utils.GetLocalizedString("{=homestead_gamemenu_autorecruittoggle}Toggle auto recruit"), (args) => {
+                args.optionLeaveType = GameMenuOption.LeaveType.Leaderboard;
+                return true;
+            }, (args) => {
+                this.CurrentHomestead.AutoRecruitEnabled = !this.CurrentHomestead.AutoRecruitEnabled;
+                float r = 255f;
+                float g = 0f;
+                if (this.CurrentHomestead.AutoRecruitEnabled) {
+                    r = 0f;
+                    g = 255f;
+                }
+                Utils.PrintLocalizedMessage("homestead_autorecruittoggle_message", "Auto recruit toggled.", r, g, 0f);
+            }, false, -1, false, null);
             // -> Rename homestead
             starter.AddGameMenuOption("homestead_menu_manage_main", "homestead_menu_manage_rename", Utils.GetLocalizedString("{=homestead_gamemenu_rename}Rename homestead"), (args) => {
                 args.optionLeaveType = GameMenuOption.LeaveType.Leaderboard;
